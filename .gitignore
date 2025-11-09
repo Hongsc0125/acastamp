@@ -38,3 +38,6 @@ Thumbs.db
 # Build
 build/
 out/
+
+# Project Documentation (local only)
+PROJECT_SETUP.md
