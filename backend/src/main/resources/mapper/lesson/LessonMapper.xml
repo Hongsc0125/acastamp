@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acastamp.backend.mapper.LessonMapper">
+
+    <!-- LessonType ResultMap -->
+    <resultMap id="LessonTypeResultMap" type="com.acastamp.backend.domain.lesson.LessonType">
+        <id property="id" column="id"/>
+        <result property="academyId" column="academy_id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="billingType" column="billing_type"/>
+        <result property="lessonCount" column="lesson_count"/>
+        <result property="periodDays" column="period_days"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- PaymentMethod ResultMap -->
+    <resultMap id="PaymentMethodResultMap" type="com.acastamp.backend.domain.lesson.PaymentMethod">
+        <id property="id" column="id"/>
+        <result property="academyId" column="academy_id"/>
+        <result property="name" column="name"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- LessonType SELECT -->
+    <select id="findLessonTypeById" resultMap="LessonTypeResultMap">
+        SELECT * FROM lesson_type WHERE id = #{id}
+    </select>
+
+    <select id="findAllLessonTypes" resultMap="LessonTypeResultMap">
+        SELECT * FROM lesson_type WHERE academy_id = #{academyId} ORDER BY created_at DESC
+    </select>
+
+    <select id="findActiveLessonTypes" resultMap="LessonTypeResultMap">
+        SELECT * FROM lesson_type WHERE academy_id = #{academyId} AND is_active = true ORDER BY name
+    </select>
+
+    <!-- LessonType INSERT -->
+    <insert id="insertLessonType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO lesson_type (academy_id, name, type, billing_type, lesson_count, period_days, is_active)
+        VALUES (#{academyId}, #{name}, #{type}, #{billingType}, #{lessonCount}, #{periodDays}, #{isActive})
+    </insert>
+
+    <!-- LessonType UPDATE -->
+    <update id="updateLessonType">
+        UPDATE lesson_type
+        SET name = #{name},
+            type = #{type},
+            billing_type = #{billingType},
+            lesson_count = #{lessonCount},
+            period_days = #{periodDays},
+            is_active = #{isActive},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- LessonType DELETE -->
+    <delete id="deleteLessonType">
+        DELETE FROM lesson_type WHERE id = #{id}
+    </delete>
+
+    <!-- PaymentMethod SELECT -->
+    <select id="findPaymentMethodById" resultMap="PaymentMethodResultMap">
+        SELECT * FROM payment_method WHERE id = #{id}
+    </select>
+
+    <select id="findAllPaymentMethods" resultMap="PaymentMethodResultMap">
+        SELECT * FROM payment_method WHERE academy_id = #{academyId} ORDER BY created_at
+    </select>
+
+    <select id="findActivePaymentMethods" resultMap="PaymentMethodResultMap">
+        SELECT * FROM payment_method WHERE academy_id = #{academyId} AND is_active = true ORDER BY name
+    </select>
+
+    <!-- PaymentMethod INSERT -->
+    <insert id="insertPaymentMethod" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO payment_method (academy_id, name, is_active)
+        VALUES (#{academyId}, #{name}, #{isActive})
+    </insert>
+
+    <!-- PaymentMethod UPDATE -->
+    <update id="updatePaymentMethod">
+        UPDATE payment_method
+        SET name = #{name},
+            is_active = #{isActive}
+        WHERE id = #{id}
+    </update>
+
+    <!-- PaymentMethod DELETE -->
+    <delete id="deletePaymentMethod">
+        DELETE FROM payment_method WHERE id = #{id}
+    </delete>
+
+</mapper>

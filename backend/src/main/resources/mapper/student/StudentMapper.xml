@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acastamp.backend.mapper.StudentMapper">
+
+    <!-- Student ResultMap -->
+    <resultMap id="StudentResultMap" type="com.acastamp.backend.domain.student.Student">
+        <id property="id" column="id"/>
+        <result property="academyId" column="academy_id"/>
+        <result property="name" column="name"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="phone" column="phone"/>
+        <result property="parentPhone" column="parent_phone"/>
+        <result property="school" column="school"/>
+        <result property="grade" column="grade"/>
+        <result property="status" column="status"/>
+        <result property="enrollmentDate" column="enrollment_date"/>
+        <result property="dormantDate" column="dormant_date"/>
+        <result property="withdrawalDate" column="withdrawal_date"/>
+        <result property="notes" column="notes"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- Enrollment ResultMap -->
+    <resultMap id="EnrollmentResultMap" type="com.acastamp.backend.domain.student.Enrollment">
+        <id property="id" column="id"/>
+        <result property="academyId" column="academy_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="lessonTypeId" column="lesson_type_id"/>
+        <result property="instructorId" column="instructor_id"/>
+        <result property="classroomId" column="classroom_id"/>
+        <result property="totalCount" column="total_count"/>
+        <result property="usedCount" column="used_count"/>
+        <result property="remainingCount" column="remaining_count"/>
+        <result property="monthlyFee" column="monthly_fee"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- Student SELECT -->
+    <select id="findById" resultMap="StudentResultMap">
+        SELECT * FROM student WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="StudentResultMap">
+        SELECT * FROM student WHERE academy_id = #{academyId} ORDER BY name
+    </select>
+
+    <select id="findByStatus" resultMap="StudentResultMap">
+        SELECT * FROM student WHERE academy_id = #{academyId} AND status = #{status} ORDER BY name
+    </select>
+
+    <!-- Student INSERT -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student (academy_id, name, birth_date, phone, parent_phone, school, grade, status, enrollment_date, notes)
+        VALUES (#{academyId}, #{name}, #{birthDate}, #{phone}, #{parentPhone}, #{school}, #{grade}, #{status}, #{enrollmentDate}, #{notes})
+    </insert>
+
+    <!-- Student UPDATE -->
+    <update id="update">
+        UPDATE student
+        SET name = #{name},
+            birth_date = #{birthDate},
+            phone = #{phone},
+            parent_phone = #{parentPhone},
+            school = #{school},
+            grade = #{grade},
+            status = #{status},
+            notes = #{notes},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE student SET status = #{status}, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}
+    </update>
+
+    <!-- Student DELETE -->
+    <delete id="delete">
+        DELETE FROM student WHERE id = #{id}
+    </delete>
+
+    <!-- Enrollment SELECT -->
+    <select id="findEnrollmentById" resultMap="EnrollmentResultMap">
+        SELECT * FROM enrollment WHERE id = #{id}
+    </select>
+
+    <select id="findEnrollmentsByStudent" resultMap="EnrollmentResultMap">
+        SELECT * FROM enrollment WHERE student_id = #{studentId} ORDER BY created_at DESC
+    </select>
+
+    <select id="findActiveEnrollmentsByStudent" resultMap="EnrollmentResultMap">
+        SELECT * FROM enrollment WHERE student_id = #{studentId} AND is_active = true
+    </select>
+
+    <!-- Enrollment INSERT -->
+    <insert id="insertEnrollment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO enrollment (academy_id, student_id, lesson_type_id, instructor_id, classroom_id,
+                                total_count, used_count, remaining_count, monthly_fee, start_date, end_date, is_active)
+        VALUES (#{academyId}, #{studentId}, #{lessonTypeId}, #{instructorId}, #{classroomId},
+                #{totalCount}, #{usedCount}, #{remainingCount}, #{monthlyFee}, #{startDate}, #{endDate}, #{isActive})
+    </insert>
+
+    <!-- Enrollment UPDATE -->
+    <update id="updateEnrollment">
+        UPDATE enrollment
+        SET lesson_type_id = #{lessonTypeId},
+            instructor_id = #{instructorId},
+            classroom_id = #{classroomId},
+            total_count = #{totalCount},
+            used_count = #{usedCount},
+            remaining_count = #{remainingCount},
+            monthly_fee = #{monthlyFee},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            is_active = #{isActive},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateUsedCount">
+        UPDATE enrollment
+        SET used_count = #{usedCount},
+            remaining_count = #{remainingCount},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- Enrollment DELETE -->
+    <delete id="deleteEnrollment">
+        DELETE FROM enrollment WHERE id = #{id}
+    </delete>
+
+</mapper>

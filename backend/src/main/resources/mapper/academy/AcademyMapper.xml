@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acastamp.backend.mapper.AcademyMapper">
+
+    <!-- Academy ResultMap -->
+    <resultMap id="AcademyResultMap" type="com.acastamp.backend.domain.academy.Academy">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="businessNumber" column="business_number"/>
+        <result property="representativeName" column="representative_name"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="accountNumber" column="account_number"/>
+        <result property="accountHolder" column="account_holder"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- AcademySettings ResultMap -->
+    <resultMap id="AcademySettingsResultMap" type="com.acastamp.backend.domain.academy.AcademySettings">
+        <id property="id" column="id"/>
+        <result property="academyId" column="academy_id"/>
+        <result property="attendanceMethod" column="attendance_method"/>
+        <result property="keypadAuthType" column="keypad_auth_type"/>
+        <result property="defaultMakeupLimit" column="default_makeup_limit"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- SELECT -->
+    <select id="findById" resultMap="AcademyResultMap">
+        SELECT * FROM academy WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="AcademyResultMap">
+        SELECT * FROM academy ORDER BY created_at DESC
+    </select>
+
+    <select id="findSettingsByAcademyId" resultMap="AcademySettingsResultMap">
+        SELECT * FROM academy_settings WHERE academy_id = #{academyId}
+    </select>
+
+    <!-- INSERT -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO academy (name, business_number, representative_name, phone, address,
+                             bank_name, account_number, account_holder)
+        VALUES (#{name}, #{businessNumber}, #{representativeName}, #{phone}, #{address},
+                #{bankName}, #{accountNumber}, #{accountHolder})
+    </insert>
+
+    <insert id="insertSettings" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO academy_settings (academy_id, attendance_method, keypad_auth_type, default_makeup_limit)
+        VALUES (#{academyId}, #{attendanceMethod}, #{keypadAuthType}, #{defaultMakeupLimit})
+    </insert>
+
+    <!-- UPDATE -->
+    <update id="update">
+        UPDATE academy
+        SET name = #{name},
+            business_number = #{businessNumber},
+            representative_name = #{representativeName},
+            phone = #{phone},
+            address = #{address},
+            bank_name = #{bankName},
+            account_number = #{accountNumber},
+            account_holder = #{accountHolder},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateSettings">
+        UPDATE academy_settings
+        SET attendance_method = #{attendanceMethod},
+            keypad_auth_type = #{keypadAuthType},
+            default_makeup_limit = #{defaultMakeupLimit},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE academy_id = #{academyId}
+    </update>
+
+    <!-- DELETE -->
+    <delete id="delete">
+        DELETE FROM academy WHERE id = #{id}
+    </delete>
+
+</mapper>
